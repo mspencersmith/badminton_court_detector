@@ -1,9 +1,8 @@
+import numpy as np
+import time
 import torch.optim as optim
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-import numpy as np
-import time
 from nn_model import Net
 from tqdm import tqdm
 
