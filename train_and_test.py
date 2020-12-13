@@ -25,7 +25,7 @@ fact = 0.1
 pat = 10
 thr = 0.000001
 val_pct = 0.20 # reserves % of data for validation
-batch_size = 200
+batch_size = 100
 lin_lay = 128
 
 
@@ -85,19 +85,20 @@ def train(net, save=False):
     with open(f"bcf_logs/{model_name}.log", "a") as f:
         for epoch in range(EPOCHS):
             print(epoch)
-            acc, loss = 0, 0
+            # acc, loss = 0, 0
             for i in tqdm(range(0, len(train_X), batch_size)):
                 batch_X = train_X[i:i+batch_size].view(-1, 1, img_wid, img_hei)
                 batch_y = train_y[i:i+batch_size]
 
                 batch_X, batch_y = batch_X.to(device), batch_y.to(device)
 
-                bat_acc, bat_loss = fwd_pass(batch_X, batch_y, train=True)
-                acc += bat_acc
-                loss += bat_loss
+                # bat_acc, bat_loss = fwd_pass(batch_X, batch_y, train=True)
+                acc, loss = fwd_pass(batch_X, batch_y, train=True)
+                # acc += bat_acc
+                # loss += bat_loss
 
-            acc = acc / batch_size
-            loss = loss / batch_size
+            # acc = acc / batch_size
+            # loss = loss / batch_size
             val_acc, val_loss = test()
             # scheduler.step(val_loss)
             f.write(
