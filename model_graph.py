@@ -3,11 +3,11 @@ from matplotlib import style
 
 style.use("ggplot")
 
-model_name = ""
+model_name = "model-1607832747-lr5e-06-factor0.1pat10-thr1e-06-val_pct0.2-batches200-128-72-128"
 
 
 def create_acc_loss_graph(model_name):
-    contents = open(f"logs/{model_name}.log", "r").read().split("\n")
+    contents = open(f"bcf_logs/{model_name}.log", "r").read().split("\n")
 
     times = []
     
@@ -38,13 +38,13 @@ def create_acc_loss_graph(model_name):
     ax1.plot(times, accuracies, label="acc")
     ax1.plot(times, val_accuracies, label="val_acc")
     ax1.legend(loc=2)
-    ax1.axis([times[0], times[-1], -10, 10])
-    # ax1.axis([times[0], times[-1], -300, 300])
+    # ax1.axis([times[0], times[-1], -10, 10])
+    ax1.axis([times[0], times[-1], -100, 100])
     ax2.plot(times, losses, label="loss")
     ax2.plot(times, val_losses, label="val_loss")
     ax2.legend(loc=2)
-    ax2.axis([times[0], times[-1], 0, 0.003])
-    # ax2.axis([times[0], times[-1], 0, 1])
+    # ax2.axis([times[0], times[-1], 0, 0.003])
+    ax2.axis([times[0], times[-1], 0, 2])
     plt.show()
     print(len(times))
 

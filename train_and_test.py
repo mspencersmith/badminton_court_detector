@@ -25,12 +25,12 @@ fact = 0.1
 pat = 10
 thr = 0.000001
 val_pct = 0.20 # reserves % of data for validation
-batch_size = 20
+batch_size = 200
 lin_lay = 128
 
 
-MODEL_NAME = f"model-{int(start)}-lr{lr}-factor{fact}pat{pat}-thr{thr}-val_pct{val_pct}-batches{batch_size}-{img_wid}-{img_hei}-{lin_lay}"
-file = f"bcf_models/{MODEL_NAME}.pth"
+model_name = f"model-{int(start)}-lr{lr}-factor{fact}pat{pat}-thr{thr}-val_pct{val_pct}-batches{batch_size}-{img_wid}-{img_hei}-{lin_lay}"
+file = f"bcf_models/{model_name}.pth"
 
 
 data_set = np.load("bcf_data/data_set.npy", allow_pickle=True)
@@ -45,9 +45,6 @@ y = torch.Tensor([i[1] for i in data_set])
 val_size = int(len(X)*val_pct)
 print(f"\nValidation set: {val_size} images")
 
-test_X = X[-val_size:]
-test_y = y[-val_size:]
-
 def fwd_pass(X, y, train=False):
     if train:
         net.zero_grad()
@@ -61,44 +58,58 @@ def fwd_pass(X, y, train=False):
 
     return acc, loss
 
-def test(size=val_size):
-    X, y = test_X[:size], test_y[:size]
-    with torch.no_grad():
-        val_acc, val_loss = fwd_pass(
-            X.view(-1, 1, img_wid, img_hei).to(device), y.to(device))
+def test():
+    test_batch = 10
+    test_X, test_y = X[-val_size:], y[-val_size:]
+    val_acc, val_loss = 0, 0
+    for i in tqdm(range(0, len(test_X), test_batch)):
+        with torch.no_grad():
+            batch_X = test_X[i:i+test_batch].view(-1, 1, img_wid, img_hei)
+            batch_y = test_y[i:i+test_batch]
+            batch_X, batch_y = batch_X.to(device), batch_y.to(device)
+            bat_acc, bat_loss = fwd_pass(batch_X, batch_y)
+            val_acc += bat_acc
+            val_loss += bat_loss
+    val_acc = val_acc / test_batch
+    val_loss = val_loss / test_batch
     print("\nOut of sample test")
     print(f"val_acc: {val_acc}, val_loss: {val_loss}")
     return val_acc, val_loss
 
 def train(net, save=False):
-    EPOCHS = 1
+    EPOCHS = 10
     train_X = X[:-val_size]
     train_y = y[:-val_size]
-    print(f"Training {MODEL_NAME}, BATCH_SIZE: {BATCH_SIZE}, EPOCHS: {EPOCHS}")
+    print(f"Training {model_name}, batch_size: {batch_size}, EPOCHS: {EPOCHS}")
     start_train = time.time()
-    with open(f"logs/{MODEL_NAME}.log", "a") as f:
+    with open(f"bcf_logs/{model_name}.log", "a") as f:
         for epoch in range(EPOCHS):
             print(epoch)
-            for i in tqdm(range(0, len(train_X), BATCH_SIZE)):
-                batch_X = train_X[i:i+BATCH_SIZE].view(-1, 1, img_wid, img_hei)
-                batch_y = train_y[i:i+BATCH_SIZE]
+            acc, loss = 0, 0
+            for i in tqdm(range(0, len(train_X), batch_size)):
+                batch_X = train_X[i:i+batch_size].view(-1, 1, img_wid, img_hei)
+                batch_y = train_y[i:i+batch_size]
 
                 batch_X, batch_y = batch_X.to(device), batch_y.to(device)
 
-                acc, loss = fwd_pass(batch_X, batch_y, train=True)
+                bat_acc, bat_loss = fwd_pass(batch_X, batch_y, train=True)
+                acc += bat_acc
+                loss += bat_loss
 
+            acc = acc / batch_size
+            loss = loss / batch_size
             val_acc, val_loss = test()
             # scheduler.step(val_loss)
             f.write(
-                f"{MODEL_NAME},{round(time.time(),3)},{round(float(acc),2)},{round(float(loss),4)},{round(float(val_acc),2)},{round(float(val_loss),4)},{epoch}\n")
+                f"{model_name},{round(time.time(),3)},{round(float(acc),2)},{round(float(loss),4)},{round(float(val_acc),2)},{round(float(val_loss),4)},{epoch}\n")
     
     finish_train = time.time()
     duration = round((finish_train - start_train)/60, 2)
     if save == True:
         torch.save(net.state_dict(), file)
-        print(f"\n{MODEL_NAME} took {duration} minutes to train and was saved in {file}")
+        print(f"\n{model_name} took {duration} minutes to train and was saved in {file}")
     else:
-        print(f"\n{MODEL_NAME} took {duration} minutes to train.")
+        print(f"\n{model_name} took {duration} minutes to train.")
 
 train(net)
 # train(net, save=True)
