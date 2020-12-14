@@ -3,7 +3,7 @@ from matplotlib import style
 
 style.use("ggplot")
 
-model_name = "model-1607832747-lr5e-06-factor0.1pat10-thr1e-06-val_pct0.2-batches200-128-72-128"
+model_name = "model-1607894369-lr5e-06-factor0.1pat10-thr1e-06-val_pct0.2-batches100-128-72-128"
 
 
 def create_acc_loss_graph(model_name):

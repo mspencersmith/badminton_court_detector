@@ -92,17 +92,17 @@ def train(net, save=False):
 
                 batch_X, batch_y = batch_X.to(device), batch_y.to(device)
 
-                bat_acc, bat_loss = fwd_pass(batch_X, batch_y, train=True)
-                # acc, loss = fwd_pass(batch_X, batch_y, train=True)
-                acc += bat_acc
-                loss += bat_loss
-
-            acc = acc / batch_size
-            loss = loss / batch_size
-            val_acc, val_loss = test()
-            # scheduler.step(val_loss)
-            f.write(
-                f"{model_name},{round(time.time(),3)},{round(float(acc),2)},{round(float(loss),4)},{round(float(val_acc),2)},{round(float(val_loss),4)},{epoch}\n")
+                # bat_acc, bat_loss = fwd_pass(batch_X, batch_y, train=True)
+                acc, loss = fwd_pass(batch_X, batch_y, train=True)
+                # acc += bat_acc
+                # loss += bat_loss
+ 
+            # acc = acc / batch_size
+            # loss = loss / batch_size
+                val_acc, val_loss = test()
+                # scheduler.step(val_loss)
+                f.write(
+                    f"{model_name},{round(time.time(),3)},{round(float(acc),2)},{round(float(loss),4)},{round(float(val_acc),2)},{round(float(val_loss),4)},{epoch}\n")
     
     finish_train = time.time()
     duration = round((finish_train - start_train)/60, 2)
