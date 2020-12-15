@@ -65,10 +65,12 @@ def _prep_batch(X, y, batches, test=True):
         batch_X = X[i:i+batches].view(-1, 1, img_wid, img_hei)
         batch_y = y[i:i+batches]
         batch_X, batch_y = batch_X.to(device), batch_y.to(device)
-        accuracy, loss = fwd_pass(batch_X, batch_y)
         if test:
-            val_acc += accuracy
+            accuracy, loss = fwd_pass(batch_X, batch_y)
+            val_acc += accuracy / 100
             val_loss += loss
+        else:
+            accuracy, loss = fwd_pass(batch_X, batch_y, train=True)
     if test:
         accuracy = val_acc / batches
         loss = val_loss / batches
