@@ -25,7 +25,7 @@ fact = 0.1
 pat = 10
 thr = 0.000001
 val_pct = 0.20 # reserves % of data for validation
-batch_size = 100
+batch_size = 150
 lin_lay = 128
 
 
@@ -70,22 +70,22 @@ def _prep_batch(X, y, batches, test=True):
             val_acc += accuracy
             val_loss += loss
     if test:
-        bat_acc = val_acc / batches
-        bat_loss = val_loss / batches
+        accuracy = val_acc / batches
+        loss = val_loss / batches
     return accuracy, loss
 
 def test():
-    test_batch = 20
+    test_batch = 10
     test_X, test_y = X[-val_size:], y[-val_size:]
-    
-    val_acc, val_loss = _prep_batch(test_X, test_y, test_batch)
+    with torch.no_grad():
+        val_acc, val_loss = _prep_batch(test_X, test_y, test_batch)
     
     print("\nOut of sample test")
     print(f"val_acc: {val_acc}, val_loss: {val_loss}")
     return val_acc, val_loss
 
 def train(net, save=False):
-    EPOCHS = 1
+    EPOCHS = 5
     train_X = X[:-val_size]
     train_y = y[:-val_size]
     print(f"Training {model_name}, batch_size: {batch_size}, EPOCHS: {EPOCHS}")
@@ -100,7 +100,7 @@ def train(net, save=False):
             val_acc, val_loss = test()
             # scheduler.step(val_loss)
             f.write(
-                    f"{model_name},{round(time.time(),3)},{round(float(acc),2)},{round(float(loss),4)},{round(float(val_acc),2)},{round(float(val_loss),4)},{epoch}\n")
+                    f"{model_name},{round(time.time(),3)},{round(float(acc),4)},{round(float(loss),8)},{round(float(val_acc),4)},{round(float(val_loss),8)},{epoch}\n")
     
     finish_train = time.time()
     duration = round((finish_train - start_train)/60, 2)

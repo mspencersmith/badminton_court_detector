@@ -15,8 +15,8 @@ class Net(nn.Module):
         self.convs(x)
 
 
-        self.fc1 = nn.Linear(self._to_linear, 512) # flattening
-        self.fc2 = nn.Linear(512, 2) # 2 classes
+        self.fc1 = nn.Linear(self._to_linear, 256) # flattening
+        self.fc2 = nn.Linear(256, 2) # 2 classes
 
     def convs(self, x):
         # max pooling over 2x2
