@@ -84,7 +84,7 @@ def test():
     return val_acc, val_loss
 
 def train(net, save=False):
-    EPOCHS = 50
+    EPOCHS = 200
     train_X = X[:-val_size]
     train_y = y[:-val_size]
     print(f"Training {model_name}, batch_size: {bat_size}, EPOCHS: {EPOCHS}")
@@ -106,8 +106,8 @@ def train(net, save=False):
     else:
         print(f"\n{model_name} took {duration} minutes to train.")
 
-train(net)
-# train(net, save=True)
+# train(net)
+train(net, save=True)
 
 finish = time.time()
 mins = round((finish - start)/60, 2)

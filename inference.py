@@ -34,9 +34,9 @@ def show(file, device, net):
         X = X.to(device)
         output = net(X)
         output = torch.argmax(output)
-        return = output
+        return output
 
-device, net = load_model('models/model-1607638724-lr5e-06-factor0.1pat10-thr1e-06-val_pct0.15-batches20-320-180-128.pth')
+device, net = load_model('bcf_models/model-1608175256-lr1e-06-factor0.1pat2-thr0.01-val_pct0.2-bat_size150-128-72-512.pth')
 
 finish = time.time()
 mins = round((finish - start)/60, 2)
@@ -53,10 +53,12 @@ directory = "badminton_court_finder/bcf_images/random"
 #     show(path, device, net)
 
 for f in range(10848, 11000):
-    if ".jpg" in f:
+    try:
         path = (f'{directory}{f}.jpg')
         show(path, device, net)
-    elif ".jpeg" in f:
+    except cv2.error as e:
+        raise e
+    else:
         path = (f'{directory}{f}.jpeg')
         show(path, device, net)
 
