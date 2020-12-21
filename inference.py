@@ -8,6 +8,8 @@ from nn_model import Net
 start = time.time()
 
 def load_model(file):
+    """Loads model on to GPU if availible otherwise loads to CPU"""
+    
     if torch.cuda.is_available():
         print(f"\nLoading neural network on GPU..\n")
         device = torch.device("cuda:0")
@@ -23,6 +25,8 @@ def load_model(file):
     return device, net
 
 def show(file, device, net):
+    """Detects if given image has a badminton court"""
+
     img_wid = 128
     img_hei = 72
     img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)

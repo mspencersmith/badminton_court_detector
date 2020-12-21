@@ -1,3 +1,10 @@
+"""
+Create data set here. Converted your images to grayscale so there are less 
+channels which takes up less memory. Also resize images so they are all the 
+same size and take up less memory" 
+
+"""
+
 import os
 import cv2
 import numpy as np
@@ -5,6 +12,8 @@ from tqdm import tqdm
 
 
 class Data():
+    """Creates data set of images and their labels"""
+    
     img_wid = 128
     img_hei = 72
     ran = "bcf_images/random"
