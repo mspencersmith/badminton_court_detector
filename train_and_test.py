@@ -60,17 +60,8 @@ def train(net, save=False):
     """Trains model with in sample data and saves model if required"""
 
     print(f"Training {model_name}, batch_size: {train_batch}, EPOCHS: {EPOCHS}")
-    start_train = time.time()
-    # with open(f"bcf_logs/{model_name}.log", "a") as f:
-    #     for epoch in range(EPOCHS):
-    #         print(epoch)
-    #         acc, loss = prep_batch(train_X, train_y, train_batch, train=True)
-    #         val_acc, val_loss = test()
-    #         scheduler.step(val_loss)
-    #         f.write(
-    #                 f"{model_name},{round(time.time(),3)},{round(float(acc),4)},{round(float(loss),8)},{round(float(val_acc),4)},{round(float(val_loss),8)},{epoch}\n")   
+    start_train = time.time()  
     iterate()
-
     finish_train = time.time()
     duration = round((finish_train - start_train)/60, 2)
     if save == True:
@@ -100,20 +91,6 @@ def test():
     print(f"val_acc: {val_acc}, val_loss: {val_loss}")
     return val_acc, val_loss
 
-def fwd_pass(X, y, train=False):
-    """Trains and/or tests network calculating accuracy and loss"""
-    
-    if train:
-        net.zero_grad()
-    outputs = net(X)
-    matches  = [torch.argmax(i)==torch.argmax(j) for i, j in zip(outputs, y)]
-    acc = matches.count(True)/len(matches)
-    loss = loss_function(outputs, y)
-    if train:
-        loss.backward()
-        optimizer.step()
-    return acc, loss
-
 def prep_batch(X, y, batch_size, train=False):
     """Batches dataset ready for forward pass"""
 
@@ -131,6 +108,19 @@ def prep_batch(X, y, batch_size, train=False):
     loss_count = loss_count / batches
     return acc_count, loss_count
 
+def fwd_pass(X, y, train=False):
+    """Trains and/or tests network calculating accuracy and loss"""
+    
+    if train:
+        net.zero_grad()
+    outputs = net(X)
+    matches  = [torch.argmax(i)==torch.argmax(j) for i, j in zip(outputs, y)]
+    acc = matches.count(True)/len(matches)
+    loss = loss_function(outputs, y)
+    if train:
+        loss.backward()
+        optimizer.step()
+    return acc, loss
 
 train(net)
 # train(net, save=True)
