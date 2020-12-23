@@ -74,37 +74,7 @@ class Inference:
         elif self.output == 1:
             print(f'{img} Badminton Court')
 
-        # if output == 0:
-        #     print(f'{self.model} Random')
-        # elif output == 1:
-        #     print(f'{self.model} Badminton Court')
-        #     cv2.imshow(self.model, img)
-        #     cv2.waitKey(0)
-        #     cv2.destroyAllWindows()
         
 inf = Inference("bcf_models/model-1608419488-lr1e-06-factor0.1pat2-thr0.01-val_pct0.2-bat_size150-128-72-512.pth", "cuda:0")
 inf.check("bcf_images/random/1.jpg")
 
-
-# directory = "bcf_images/random/"
-# directory = "bcf_images/badminton_court"
-# directory = "bcf_images/overflow"
-
-# show("bcf_images/random/0.jpg", device, net)
-
-# for f in os.listdir(directory):
-#     path = os.path.join(directory, f)
-#     show(path, device, net)
-
-# for f in range(0, 100):
-
-#     try:
-#         path = (f'{directory}{f}.jpeg')
-#         show(path, device, net)
-#     except cv2.error as e2:
-#         pass
-#     try:
-#         path = (f'{directory}{f}.jpg')
-#         show(path, device, net)
-#     except cv2.error as e:
-#         pass
