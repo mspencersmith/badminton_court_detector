@@ -9,43 +9,23 @@ import cv2
 import os
 import numpy as np
 import torch
-import time
 from nn_model import Net
-
-start = time.time()
-
+from load_model import LoadModel
 
 
-class Inference:
+class Inference(LoadModel):
     """Evaluates model"""
     
     def __init__(self, model, processor):
-        """Initialises model and image variables"""
+        """Initialises image variables and loads model"""
         self.img_wid = 128
         self.img_hei = 72
-        self.model = model
-        self.processor = processor
-        self.load_model()
-    
-    def load_model(self):
-        """Loads model on to GPU if availible otherwise loads to CPU"""     
-        if "cuda" in self.processor and torch.cuda.is_available()==False:
-            print("\nCuda unavailable\n")
-            self.processor = "cpu"
-        print(f"\nLoading neural network on {self.processor}..\n")
-        self.device, self.net = self._to_dev()
-        
-    def _to_dev(self):
-        """Initialises model onto device"""
-        self.device = torch.device(self.processor)
-        self.net = Net().to(self.device)
-        self.net.load_state_dict(torch.load(self.model, map_location=self.device))
-        self.net.eval()
-        return self.device, self.net
+        super().__init__(model, processor)
     
     def chk(self, ori_img, img_chk=None):
         """Checks if image is a badminton court"""
-        img_chk = img_chk.upper()
+        if img_chk:
+            img_chk = img_chk.upper()
         self.ori_img = ori_img
         self.pass_()
         if self.output == 0:
