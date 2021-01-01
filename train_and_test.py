@@ -5,6 +5,7 @@ Try and keep validation % (val_pct) close to 20% to keep model honest.
 The larger your data set the more batches you will have to use.
 """
 import numpy as np
+import prep
 import time
 import torch.optim as optim
 import torch
@@ -34,19 +35,18 @@ val_pct = 0.20 # reserves % of data for validation
 train_batch = 150
 test_batch = 10
 lin_lay = 512
-EPOCHS = 200
+EPOCHS = 1
 
 model_name = f"model-{int(start)}-lr{lr}-factor{fact}pat{pat}-thr{thr}-val_pct{val_pct}-train_batch{train_batch}-{img_wid}-{img_hei}-{lin_lay}"
 file = f"bcf_models/{model_name}.pth"
 
 
-data_set = np.load("bcf_data/data_set.npy", allow_pickle=True)
+data_set = np.load("bcf_data/data_set_test.npy", allow_pickle=True)
 optimizer = optim.Adam(net.parameters(), lr=lr)
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=fact, patience=pat, threshold=thr, verbose=True)
 loss_function = nn.MSELoss()
 
-X = torch.Tensor([i[0] for i in data_set]).view(-1, 128, 72)
-X = X/255.0 # scales images between 0 and 1
+X = prep.arr([i[0] for i in data_set], img_wid, img_hei)
 y = torch.Tensor([i[1] for i in data_set])
 
 val_size = int(len(X)*val_pct)

@@ -9,6 +9,7 @@ import cv2
 import os
 import numpy as np
 import torch
+import prep
 from nn_model import Net
 from load_model import LoadModel
 
@@ -58,8 +59,8 @@ class Inference(LoadModel):
 
     def pass_(self):
         """Passes image array through model"""
-        self.prep_img()
-        self.prep_arr()
+        self.img, self.img_arr = prep.img(self.ori_img, self.img_wid, self.img_hei)
+        self.X = prep.arr(self.img_arr, self.img_wid, self.img_hei)
         
         with torch.no_grad():
             self.X = self.X.to(self.device)
@@ -67,23 +68,6 @@ class Inference(LoadModel):
             self.output = torch.argmax(self.output)
             # print(self.output)
             return self.output
-
-    def prep_img(self, ori_img=None):
-        """Converts image to array"""
-        if ori_img:
-            self.ori_img = ori_img
-        self.img = cv2.imread(self.ori_img, cv2.IMREAD_GRAYSCALE)
-        self.img = cv2.resize(self.img, (self.img_wid, self.img_hei))
-        self.img_arr = np.array(self.img)
-        return self.img_arr
-        
-    def prep_arr(self, arr=None):
-        """Prepares array for pass through model"""
-        if arr:
-            self.img_arr = arr
-        self.X = torch.Tensor(self.img_arr).view(-1, 1, self.img_wid, self.img_hei)
-        self.X = self.X/255.0
-        return self.X
 
     def dis_err(self, img_chk):
         """Displays errors in directory for given classifer"""

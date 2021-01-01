@@ -1,12 +1,12 @@
 """
-Create data set here. Converted your images to grayscale so there are less 
+Create data set here. Convert images to grayscale so there are less 
 channels which takes up less memory. Also resize images so they are all the 
 same size and take up less memory" 
 
 """
 
 import os
-import cv2
+import prep
 import numpy as np
 from tqdm import tqdm
 
@@ -30,9 +30,8 @@ class Data():
             for f in tqdm(os.listdir(label)):
                 try:
                     path = os.path.join(label, f)
-                    img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-                    img = cv2.resize(img, (self.img_wid, self.img_hei))
-                    self.data_set.append([np.array(img), np.eye(2)
+                    _, img_arr = prep.img(path, self.img_wid, self.img_hei)
+                    self.data_set.append([img_arr, np.eye(2)
                         [self.LABELS[label]]])
                     # print(np.eye(2)[self.LABELS[label]])
                     # print(self.data_set[0])
