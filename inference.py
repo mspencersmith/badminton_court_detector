@@ -35,7 +35,6 @@ class Inference(LoadModel):
             print(f'{self.ori_img} Badminton Court')
         if img_chk:
             self.dis_err(img_chk)
-        return self.output
 
     def chk_dir(self, dir_, img_chk=None):
         """Checks if a badminton court is in a directory"""
@@ -66,8 +65,6 @@ class Inference(LoadModel):
             self.X = self.X.to(self.device)
             self.output = self.net(self.X)
             self.output = torch.argmax(self.output)
-            # print(self.output)
-            return self.output
 
     def dis_err(self, img_chk):
         """Displays errors in directory for given classifer"""

@@ -28,5 +28,4 @@ class LoadModel:
         self.net = Net().to(self.device)
         self.net.load_state_dict(torch.load(self.model, map_location=self.device))
         self.net.eval()
-        return self.device, self.net
     
