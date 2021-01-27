@@ -8,16 +8,18 @@ same size and take up less memory"
 import os
 import prep
 import numpy as np
+from pathlib import Path
 from tqdm import tqdm
 
 
 class Data():
     """Creates data set of images and their labels"""
-    
+    BASE_DIR = Path(__file__).resolve().parent.parent
     img_wid = 128
     img_hei = 72
-    ran = "bcf_images/random"
-    bc = "bcf_images/badminton_court"
+    ran = os.path.join(BASE_DIR, "data/images/random")
+    bc = os.path.join(BASE_DIR, "data/images/badminton_court")
+    output = os.path.join(BASE_DIR, "data/data_set.npy")
     LABELS = {ran: 0, bc: 1}
     data_set = []
     
@@ -46,7 +48,7 @@ class Data():
                     print(label. f, str(e))
 
         np.random.shuffle(self.data_set)
-        np.save("bcf_data/data_set.npy", self.data_set)
+        np.save(self.output, self.data_set)
         print("Random: ", self.ran_count)
         print("Badminton Court: ", self.bc_count)
         print(f"Total: {len(self.data_set)}")

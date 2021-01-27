@@ -10,7 +10,6 @@ import os
 import numpy as np
 import torch
 import prep
-from nn_model import Net
 from load_model import LoadModel
 
 

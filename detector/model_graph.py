@@ -9,7 +9,7 @@ model_name = "model-1608419488-lr1e-06-factor0.1pat2-thr0.01-val_pct0.2-bat_size
 def create_acc_loss_graph(model_name):
     """Plots graphs for accuracy and loss against time"""
 
-    contents = open(f"bcf_logs/{model_name}.log", "r").read().split("\n")
+    contents = open(f"logs/{model_name}.log", "r").read().split("\n")
 
     times = []
     

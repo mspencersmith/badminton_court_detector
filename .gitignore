@@ -1,6 +1,5 @@
 vir_env/
 __pycache__/
-bcf_images/
-bcf_data/
+data/
 tests/
 *.npy

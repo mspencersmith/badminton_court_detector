@@ -6,11 +6,13 @@ The larger your data set the more batches you will have to use.
 """
 import numpy as np
 import prep
+import os.path
 import time
 import torch.optim as optim
 import torch
 import torch.nn as nn
 from nn_model import Net
+from pathlib import Path
 from tqdm import tqdm
 
 img_wid = 128
@@ -37,11 +39,12 @@ test_batch = 10
 lin_lay = 512
 EPOCHS = 1
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 model_name = f"model-{int(start)}-lr{lr}-factor{fact}pat{pat}-thr{thr}-val_pct{val_pct}-train_batch{train_batch}-{img_wid}-{img_hei}-{lin_lay}"
-file = f"bcf_models/{model_name}.pth"
+model = os.path.join(BASE_DIR, f"models/{model_name}.pth")
 
-
-data_set = np.load("bcf_data/data_set_test.npy", allow_pickle=True)
+data_path = os.path.join(BASE_DIR, "data/data_set_test.npy")
+data_set = np.load(data_path, allow_pickle=True)
 optimizer = optim.Adam(net.parameters(), lr=lr)
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=fact, patience=pat, threshold=thr, verbose=True)
 loss_function = nn.MSELoss()
@@ -65,15 +68,15 @@ def train(net, save=False):
     finish_train = time.time()
     duration = round((finish_train - start_train)/60, 2)
     if save == True:
-        torch.save(net.state_dict(), file)
-        print(f"\n{model_name} took {duration} minutes to train and was saved in {file}")
+        torch.save(net.state_dict(), model)
+        print(f"\n{model_name} took {duration} minutes to train and was saved in {model}")
     else:
         print(f"\n{model_name} took {duration} minutes to train.")
 
 def iterate():
     """Iterates through each epoch, adjusts learning rate when required and logs results"""
-    
-    with open(f"bcf_logs/{model_name}.log", "a") as f:
+    log_path = f'logs/{model_name}.log'
+    with open(log_path, "a") as f:
         for epoch in range(EPOCHS):
             print(epoch)
             acc, loss = prep_batch(train_X, train_y, train_batch, train=True)
@@ -84,7 +87,6 @@ def iterate():
 
 def test():
     """Performs out of sample test"""
-    
     with torch.no_grad():
         val_acc, val_loss = prep_batch(test_X, test_y, test_batch)
     print("\nOut of sample test")
@@ -93,7 +95,6 @@ def test():
 
 def prep_batch(X, y, batch_size, train=False):
     """Batches dataset ready for forward pass"""
-
     acc_count, loss_count = 0, 0
     length = len(X)
     batches = length / batch_size
@@ -110,7 +111,6 @@ def prep_batch(X, y, batch_size, train=False):
 
 def fwd_pass(X, y, train=False):
     """Trains and/or tests network calculating accuracy and loss"""
-    
     if train:
         net.zero_grad()
     outputs = net(X)
