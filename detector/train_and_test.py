@@ -102,14 +102,14 @@ def pass_batch(X, y, batch_size, train=False):
         batch_X = X[i:i+batch_size].view(-1, 1, img_wid, img_hei)
         batch_y = y[i:i+batch_size]
         batch_X, batch_y = batch_X.to(device), batch_y.to(device)
-        accuracy, loss = fwd_pass(batch_X, batch_y, train)
+        accuracy, loss = foreword_pass(batch_X, batch_y, train)
         acc_count += accuracy
         loss_count += loss
     acc_count = acc_count / batches
     loss_count = loss_count / batches
     return acc_count, loss_count
 
-def fwd_pass(X, y, train=False):
+def foreword_pass(X, y, train=False):
     """Trains and/or tests network calculating accuracy and loss"""
     if train:
         net.zero_grad()
