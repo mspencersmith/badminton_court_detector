@@ -27,4 +27,8 @@ For the convolutional layers I started with fairly standard 5x5 Kernels and 2x2 
 
 ## Training
 
-I used 80% of the data set to train models while using the remaining 20% for out of sample testing. This helped me ensure that models generalised rather than over fitting to the training set. I used the lr_scheduler.ReduceLROnPlateau() function to monitor validation loss after each Epoch which allowed me to reduce the learning rate if the validation loss stagnated. As I trained and tested different models It became clear the most effective starting parameters were: a learning rate of 0.000001, a paitence of 2 epochs before reduction, a threshold of 0.01 to only focus on significant changes, and a factor of lr * 0.1 reduction when the threshold of stagnation was met.
+The train_and_test function I created in the train_and_test.py module allowed me to iterate through each epoch while logging the results. The pass_batch function allowed me to pass batches of the data set to the models reducing memory requirements, and the forward_pass function allowed me to utilise a single function for both training and out of sample testing. 
+
+I used 80% of the data set to train models while using the remaining 20% for out of sample testing. This helped ensure that models generalised rather than over fitting to the training set. I created the test function to perform an out of sample test after each epoch and used the lr_scheduler.ReduceLROnPlateau() function to monitor validation loss which allowed me to reduce the learning rate if the validation loss stagnated. 
+
+As I trained and tested different models It became clear the most effective starting parameters were: a learning rate of 0.000001, a paitence of 2 epochs before reduction, a threshold of 0.01 to only focus on significant changes, and a factor of lr * 0.1 reduction when the threshold of stagnation was met.
