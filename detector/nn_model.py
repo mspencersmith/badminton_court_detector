@@ -21,15 +21,12 @@ class Net(nn.Module):
         self._to_linear = None
         self.convs(x)
 
-
         self.fc1 = nn.Linear(self._to_linear, 512) # flattening
         self.fc2 = nn.Linear(512, 2) # 2 output classes
 
     def convs(self, x):
         """Applies activation function on convolutional layers of network"""
-
-        # max pooling over 2x2
-        x = F.max_pool2d(F.relu(self.conv1(x)), (2,2))
+        x = F.max_pool2d(F.relu(self.conv1(x)), (2,2)) # max pooling over 2x2
         x = F.max_pool2d(F.relu(self.conv2(x)), (2,2))
         x = F.max_pool2d(F.relu(self.conv3(x)), (2,2))
 
@@ -40,7 +37,6 @@ class Net(nn.Module):
 
     def forward(self, x):
         """Applies activation function on linear layers of network"""
-
         x = self.convs(x)
         x = x.view(-1, self._to_linear) # .view is reshape, flattens x before
         x = F.relu(self.fc1(x))

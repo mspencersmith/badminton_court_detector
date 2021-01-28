@@ -59,12 +59,12 @@ train_X, train_y  = X[:-val_size], y[:-val_size]
 test_X, test_y = X[-val_size:], y[-val_size:]
 
 
-def train(net, save=False):
+def start_training(net, save=False):
     """Trains model with in sample data and saves model if required"""
 
     print(f"Training {model_name}, batch_size: {train_batch}, EPOCHS: {EPOCHS}")
     start_train = time.time()  
-    iterate()
+    train_and_test()
     finish_train = time.time()
     duration = round((finish_train - start_train)/60, 2)
     if save == True:
@@ -73,13 +73,13 @@ def train(net, save=False):
     else:
         print(f"\n{model_name} took {duration} minutes to train.")
 
-def iterate():
-    """Iterates through each epoch, adjusts learning rate when required and logs results"""
+def train_and_test():
+    """Trains and tests model, adjusts learning rate when required and logs results"""
     log_path = f'logs/{model_name}.log'
     with open(log_path, "a") as f:
         for epoch in range(EPOCHS):
             print(epoch)
-            acc, loss = prep_batch(train_X, train_y, train_batch, train=True)
+            acc, loss = pass_batch(train_X, train_y, train_batch, train=True)
             val_acc, val_loss = test()
             scheduler.step(val_loss)
             f.write(
@@ -88,12 +88,12 @@ def iterate():
 def test():
     """Performs out of sample test"""
     with torch.no_grad():
-        val_acc, val_loss = prep_batch(test_X, test_y, test_batch)
+        val_acc, val_loss = pass_batch(test_X, test_y, test_batch)
     print("\nOut of sample test")
     print(f"val_acc: {val_acc}, val_loss: {val_loss}")
     return val_acc, val_loss
 
-def prep_batch(X, y, batch_size, train=False):
+def pass_batch(X, y, batch_size, train=False):
     """Batches dataset ready for forward pass"""
     acc_count, loss_count = 0, 0
     length = len(X)
@@ -122,8 +122,8 @@ def fwd_pass(X, y, train=False):
         optimizer.step()
     return acc, loss
 
-train(net)
-# train(net, save=True)
+start_training(net)
+# start_training(net, save=True)
 
 finish = time.time()
 mins = round((finish - start)/60, 2)
