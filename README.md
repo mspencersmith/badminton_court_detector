@@ -23,7 +23,7 @@ Due to the hardware available to me it was necessary to scale the images down to
 
 Again taking into account the hardware available to me and my experience of building similar models in the past I decided to build a model with 3 convolutional layers, and 2 linear layers (the second linear layer being the output layer) as seen in the nn_model.py module. 
 
-For the convolutional layers I started with fairly standard 5x5 Kernels and 2x2 max pooling with the intention to calibrate these parameters in the future if required. When choosing an activation function the Sigmoid, Tanh and Relu functions all had suitable characteristics so I decided to test all of them and see which performed better.
+For the convolutional layers I started with fairly standard 5x5 Kernels and 2x2 max pooling with the intention to calibrate these parameters in the future if required. 
 
 ## Training
 
