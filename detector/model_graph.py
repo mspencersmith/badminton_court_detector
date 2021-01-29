@@ -1,53 +1,30 @@
 import matplotlib.pyplot as plt
-from matplotlib import style
+import pandas as pd
 
-style.use("ggplot")
+model_name = "logs/model-1608419488-lr1e-06-factor0.1pat2-thr0.01-val_pct0.2-bat_size150-128-72-512.csv"
 
-model_name = "model-1608419488-lr1e-06-factor0.1pat2-thr0.01-val_pct0.2-bat_size150-128-72-512"
+df = pd.read_csv(model_name)
+print(df)
 
+plt.style.use('seaborn')
 
-def create_acc_loss_graph(model_name):
-    """Plots graphs for accuracy and loss against time"""
+fig = plt.figure()
+ax1 = plt.subplot(2,1,1)
+ax2 = plt.subplot(2,1,2)
 
-    contents = open(f"logs/{model_name}.log", "r").read().split("\n")
+ax1.set_title('Training Set Accuracy vs Validation Set Accuracy')
+ax1.plot(df.epoch, df.acc, label='Training')
+ax1.plot(df.epoch, df.val_acc, label='Validation')
+ax1.legend()
+ax1.set_xlabel('Epoch')
+ax1.set_ylabel('Accuracy')
 
-    times = []
-    
-    accuracies = []
-    losses = []
+ax2.set_title('Training Set Loss vs Validation Set Loss')
+ax2.plot(df.epoch, df.loss, label='Training')
+ax2.plot(df.epoch, df.val_loss, label='Validation')
+ax2.legend()
+ax2.set_xlabel('Epoch')
+ax2.set_ylabel('Loss')
 
-    val_accuracies = []
-    val_losses = []
-
-    for c in contents:
-        if model_name in c:
-            name, timestamp, acc, loss, val_acc, val_loss, epoch = c.split(",")
-
-            times.append(float(timestamp))
-            accuracies.append(float(acc))
-            losses.append(float(loss))
-
-            val_accuracies.append(float(val_acc))
-            val_losses.append(float(val_loss))
-
-
-    fig = plt.figure()
-
-    ax1 = plt.subplot2grid((2,1), (0,0))
-    ax2 = plt.subplot2grid((2,1), (1,0))
-
-    ax1.set_title(model_name)
-    ax1.plot(times, accuracies, label="acc")
-    ax1.plot(times, val_accuracies, label="val_acc")
-    ax1.legend(loc=2)
-    ax1.axis([times[0], times[-1], 0, 1])
-    # ax1.axis([times[0], times[-1], -100, 100])
-    ax2.plot(times, losses, label="loss")
-    ax2.plot(times, val_losses, label="val_loss")
-    ax2.legend(loc=2)
-    ax2.axis([times[0], times[-1], 0, 0.05])
-    # ax2.axis([times[0], times[-1], 0, 20])
-    plt.show()
-    print(len(times))
-
-create_acc_loss_graph(model_name)
+plt.subplots_adjust(hspace=0.4)
+plt.show()

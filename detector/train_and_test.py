@@ -4,6 +4,7 @@ the learning rate until you have experimented with what value works best.
 Try and keep validation % (val_pct) close to 20% to keep model honest. 
 The larger your data set the more batches you will have to use.
 """
+import csv
 import numpy as np
 import prep
 import os.path
@@ -75,15 +76,17 @@ def start_training(net, save=False):
 
 def train_and_test():
     """Trains and tests model, adjusts learning rate when required and logs results"""
-    log_path = f'logs/{model_name}.log'
-    with open(log_path, "a") as f:
+    log_path = f'logs/{model_name}.csv'
+    with open(log_path, "a", newline='') as csv_file:
+        f = csv.writer(csv_file)
+        f.writerow(['time', 'acc', 'loss', 'val_acc', 'val_loss', 'epoch'])
         for epoch in range(EPOCHS):
             print(epoch)
             acc, loss = pass_batch(train_X, train_y, train_batch, train=True)
             val_acc, val_loss = test()
             scheduler.step(val_loss)
-            f.write(
-                    f"{model_name},{round(time.time(),3)},{round(float(acc),4)},{round(float(loss),8)},{round(float(val_acc),4)},{round(float(val_loss),8)},{epoch}\n")
+            f.writerow(
+                    [round(time.time(),3),round(float(acc),4),round(float(loss),8),round(float(val_acc),4),round(float(val_loss),8),epoch])
 
 def test():
     """Performs out of sample test"""
