@@ -38,17 +38,18 @@ val_pct = 0.20 # reserves % of data for validation
 train_batch = 150
 test_batch = 10
 lin_lay = 512
-EPOCHS = 1
+EPOCHS = 200
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 model_name = f"model-{int(start)}-lr{lr}-factor{fact}pat{pat}-thr{thr}-val_pct{val_pct}-train_batch{train_batch}-{img_wid}-{img_hei}-{lin_lay}"
 model = os.path.join(BASE_DIR, f"models/{model_name}.pth")
 
-data_path = os.path.join(BASE_DIR, "data/data_set_test.npy")
+data_path = os.path.join(BASE_DIR, "data/data_set.npy")
 data_set = np.load(data_path, allow_pickle=True)
 optimizer = optim.Adam(net.parameters(), lr=lr)
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=fact, patience=pat, threshold=thr, verbose=True)
 loss_function = nn.MSELoss()
+# loss_function = nn.BCELoss()
 
 X = prep.arr([i[0] for i in data_set], img_wid, img_hei)
 y = torch.Tensor([i[1] for i in data_set])

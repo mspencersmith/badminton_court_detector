@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-model_name = "logs/model-1608419488-lr1e-06-factor0.1pat2-thr0.01-val_pct0.2-bat_size150-128-72-512.csv"
+model_name = "logs/model-1612373264-lr1e-06-factor0.1pat2-thr0.01-val_pct0.2-train_batch150-128-72-512-sig-bce.csv"
 
 df = pd.read_csv(model_name)
 print(df)
