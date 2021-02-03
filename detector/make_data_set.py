@@ -35,8 +35,6 @@ class Data():
                     _, img_arr = prep.img(path, self.img_wid, self.img_hei)
                     self.data_set.append([img_arr, np.eye(2)
                         [self.LABELS[label]]])
-                    # print(np.eye(2)[self.LABELS[label]])
-                    # print(self.data_set[0])
 
                     if label == self.ran:
                         self.ran_count += 1
@@ -44,7 +42,6 @@ class Data():
                         self.bc_count += 1
 
                 except Exception as e:
-                    # pass
                     print(label. f, str(e))
 
         np.random.shuffle(self.data_set)

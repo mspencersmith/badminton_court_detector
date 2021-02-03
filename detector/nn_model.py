@@ -16,7 +16,7 @@ class Net(nn.Module):
         self.conv2 = nn.Conv2d(32, 64, 5)
         self.conv3 = nn.Conv2d(64, 128, 5)
 
-        # pass through random data to flatten for linear
+        # Pass through random data to find shape of conv3 output
         x = torch.randn(128, 72).view(-1, 1, 128, 72)
         self._to_linear = None
         self.convs(x)
@@ -30,7 +30,7 @@ class Net(nn.Module):
         x = F.max_pool2d(F.relu(self.conv2(x)), (2,2))
         x = F.max_pool2d(F.relu(self.conv3(x)), (2,2))
 
-        # Flatten
+        # Finds shape for flattening
         if self._to_linear is None:
             self._to_linear = x[0].shape[0]*x[0].shape[1]*x[0].shape[2]
         return x
