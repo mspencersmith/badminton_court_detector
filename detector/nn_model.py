@@ -41,6 +41,7 @@ class Net(nn.Module):
         x = x.view(-1, self._to_linear) # .view is reshape, flattens x before
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
-        return F.softmax(x, dim=1)
+        # return F.softmax(x, dim=1)
+        return x
 net = Net()
 print(net)

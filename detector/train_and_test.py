@@ -50,6 +50,7 @@ optimizer = optim.Adam(net.parameters(), lr=lr)
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=fact, patience=pat, threshold=thr, verbose=True)
 loss_function = nn.MSELoss()
 # loss_function = nn.BCELoss()
+# loss_function = nn.L1Loss()
 
 X = prep.arr([i[0] for i in data_set], img_wid, img_hei)
 y = torch.Tensor([i[1] for i in data_set])
@@ -126,8 +127,8 @@ def foreword_pass(X, y, train=False):
         optimizer.step()
     return acc, loss
 
-start_training(net)
-# start_training(net, save=True)
+# start_training(net)
+start_training(net, save=True)
 
 finish = time.time()
 mins = round((finish - start)/60, 2)
