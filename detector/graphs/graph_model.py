@@ -1,9 +1,12 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import os.path
+from pathlib import Path
 
-model_name = "logs/model-1612373264-lr1e-06-factor0.1pat2-thr0.01-val_pct0.2-train_batch150-128-72-512-sig-bce.csv"
-
-df = pd.read_csv(model_name)
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+model_name = "detector/logs/model-1612373264-lr1e-06-factor0.1pat2-thr0.01-val_pct0.2-train_batch150-128-72-512-sig-bce.csv"
+model = os.path.join(BASE_DIR, model_name)
+df = pd.read_csv(model)
 print(df)
 
 plt.style.use('seaborn')
