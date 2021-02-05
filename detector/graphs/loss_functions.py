@@ -33,6 +33,6 @@ ax2.legend()
 ax2.set_xlabel('Epoch')
 ax2.set_ylabel('Loss')
 
-plt.subplots_adjust(hspace=0.4)
+plt.subplots_adjust(hspace=0.5)
 plt.savefig('saves/loss_functions.png', dpi=400, bbox_inches='tight')
 plt.show()
