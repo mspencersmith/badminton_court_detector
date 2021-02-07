@@ -22,65 +22,59 @@ class Inference(LoadModel):
         self.img_hei = 72
         super().__init__(model, processor)
     
-    def chk(self, ori_img, img_chk=None):
+    def check(self, img, img_check=None):
         """Checks if image is a badminton court"""
-        if img_chk:
-            img_chk = img_chk.upper()
-        self.ori_img = ori_img
-        self.pass_()
-        if self.output == 0:
-            print(f'{self.ori_img} No Badmiton Court')
-        elif self.output == 1:
-            print(f'{self.ori_img} Badminton Court')
-        if img_chk:
-            self.dis_err(img_chk)
+        output = self.pass_(img)
+        if output == 0:
+            print(f'{img} No Badmiton Court')
+        elif output == 1:
+            print(f'{img} Badminton Court')
+        if img_check:
+            self.display_error(img, output, img_check)
 
-    def chk_dir(self, dir_, img_chk=None):
+    def check_dir(self, dir_, img_check=None):
         """Checks if a badminton court is in a directory"""
         for f in os.listdir(dir_):
             if '.jpg' in f or ".jpeg" in f:
-                self.ori_img = os.path.join(dir_, f)
-                self.chk(self.ori_img, img_chk)
+                img = os.path.join(dir_, f)
+                self.check(img, img_check)
 
-    def chk_num(self, dir_, start, stop, img_chk=None):
+    def check_num(self, dir_, start, stop, img_check=None):
         """Checks a range of numbered files for badminton court"""
         for f in range(start, stop):
             try:
-                self.ori_img = (f'{dir_}{f}.jpg')
-                self.chk(self.ori_img, img_chk)
+                img = (f'{dir_}{f}.jpg')
+                self.check(img, img_check)
             except cv2.error as e2:
                 try:
                     path = (f'{dir_}{f}.jpeg')
-                    self.chk(self.ori_img, img_chk)
+                    self.check(img, img_check)
                 except cv2.error as e:
                     pass
 
-    def pass_(self):
+    def pass_(self, img):
         """Passes image array through model"""
-        self.img, self.img_arr = prep.img(self.ori_img, self.img_wid, self.img_hei)
-        self.X = prep.arr(self.img_arr, self.img_wid, self.img_hei)
+        img_arr = prep.img(img, self.img_wid, self.img_hei)
+        X = prep.arr(img_arr, self.img_wid, self.img_hei)
         
         with torch.no_grad():
-            self.X = self.X.to(self.device)
-            self.output = self.net(self.X)
-            self.output = torch.argmax(self.output)
+            X = X.to(self.device)
+            output = self.net(X)
+            output = torch.argmax(output)
+        return output
 
-    def dis_err(self, img_chk):
+    def display_error(self, img, output, img_check):
         """Displays errors in directory for given classifer"""
-        if img_chk == 'NBC' and self.output == 1:
+        if img_check == 'NBC' and output == 1:
             print(f'Error should not be labelled badminton court')
-            self._dis_img()
-        elif img_chk == 'BC' and self.output == 0:
+            self.display_image(img)
+        elif img_check == 'BC' and output == 0:
             print(f'Error should be labelled badminton court')
-            self._dis_img()
+            self.display_image(img)
 
-    def _dis_img(self):
+    def display_image(self, img):
         """Displays image"""
-        img = cv2.imread(self.ori_img)
-        cv2.imshow(self.ori_img, img)
+        display = cv2.imread(img)
+        cv2.imshow(img, display)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-
-
-
-

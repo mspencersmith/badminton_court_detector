@@ -13,7 +13,7 @@ def img(ori_img, img_wid, img_hei):
     img = cv2.imread(ori_img, cv2.IMREAD_GRAYSCALE)
     img = cv2.resize(img, (img_wid, img_hei))
     img_arr = np.array(img)
-    return img, img_arr
+    return img_arr
     
 def arr(img_arr, img_wid, img_hei):
     """Prepares array for pass through model"""

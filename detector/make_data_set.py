@@ -32,7 +32,7 @@ class Data():
             for f in tqdm(os.listdir(label)):
                 try:
                     path = os.path.join(label, f)
-                    _, img_arr = prep.img(path, self.img_wid, self.img_hei)
+                    img_arr = prep.img(path, self.img_wid, self.img_hei)
                     self.data_set.append([img_arr, np.eye(2)
                         [self.LABELS[label]]])
 
