@@ -7,20 +7,18 @@ To see image of errors set img_check
 """
 import cv2
 import os
-import numpy as np
 import torch
 import prep
-from load_model import LoadModel
+from load import load_model
 
-
-class Inference(LoadModel):
+class Inference:
     """Evaluates model"""
     
     def __init__(self, model, processor):
         """Initialises image variables and loads model"""
         self.img_wid = 128
         self.img_hei = 72
-        super().__init__(model, processor)
+        self.device, self.net = load_model(model, processor)
     
     def check(self, img, img_check=None):
         """Checks if image is a badminton court"""
