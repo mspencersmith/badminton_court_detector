@@ -8,6 +8,11 @@ To see image of errors set img_check
 import cv2
 import os
 import torch
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
+import sys
+detector = os.path.join(BASE_DIR, "detector")
+sys.path.append(detector)
 import prep
 from load import load_model
 

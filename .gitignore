@@ -1,5 +1,4 @@
 vir_env/
 __pycache__/
 data/
-tests/
 *.npy
