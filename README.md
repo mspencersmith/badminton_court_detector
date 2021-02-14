@@ -34,3 +34,5 @@ I used 80% of the data set to train models while using the remaining 20% for out
 As I trained and tested different models It became clear the most effective starting parameters were: a learning rate of 0.000001, a patience of 2 epochs before reduction, a threshold of 0.01 to only focus on significant changes, and a factor of lr * 0.1 reduction when the threshold of stagnation was met. I experimented with 2 different loss functions, Mean Squared Error and Binary Cross Entropy. Although on average there was only a small difference in accuracy (MSE 98.5%, BCE 98.0%) there was a more significant difference in loss where MSE(0.014) out performed BCE(0.070) as seen below.
 
 ![Loss Functions](/detector/graphs/saves/loss_functions.png)
+
+You can test your own images using the inference.py and inference_test.py modules found in the tests folder.
