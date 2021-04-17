@@ -7,12 +7,10 @@ import cv2
 import numpy as np
 import torch
 
-
 def img(ori_img, img_wid, img_hei):
     """Converts image to grayscale and then into an array"""
-    img = cv2.imread(ori_img, cv2.IMREAD_GRAYSCALE)
-    img = cv2.resize(img, (img_wid, img_hei))
-    img_arr = np.array(img)
+    img_arr = cv2.imread(ori_img, cv2.IMREAD_GRAYSCALE)
+    img_arr = cv2.resize(img_arr, (img_wid, img_hei))
     return img_arr
     
 def arr(img_arr, img_wid, img_hei):
@@ -20,7 +18,3 @@ def arr(img_arr, img_wid, img_hei):
     X = torch.Tensor(img_arr).view(-1, 1, img_wid, img_hei)
     X = X/255.0
     return X
-
-
-
-
