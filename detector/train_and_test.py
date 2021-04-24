@@ -107,12 +107,12 @@ def pass_batch(X, y, batch_size, train=False):
         batch_X = X[i:i+batch_size].view(-1, 1, img_wid, img_hei)
         batch_y = y[i:i+batch_size]
         batch_X, batch_y = batch_X.to(device), batch_y.to(device)
-        accuracy, loss = foreword_pass(batch_X, batch_y, train)
-        acc_count += accuracy
-        loss_count += loss
-    acc_count = acc_count / batches
-    loss_count = loss_count / batches
-    return acc_count, loss_count
+        batch_acc, batch_loss = foreword_pass(batch_X, batch_y, train)
+        acc_count += batch_acc
+        loss_count += batch_loss
+    accuracy = acc_count / length
+    loss = loss_count / math.ceil(batches)
+    return accuracy, loss
 
 def foreword_pass(X, y, train=False):
     """Trains and/or tests network calculating accuracy and loss"""
@@ -120,7 +120,7 @@ def foreword_pass(X, y, train=False):
         net.zero_grad()
     outputs = net(X)
     matches  = [torch.argmax(i)==torch.argmax(j) for i, j in zip(outputs, y)]
-    acc = matches.count(True)/len(matches)
+    acc = matches.count(True)
     loss = loss_function(outputs, y)
     if train:
         loss.backward()
